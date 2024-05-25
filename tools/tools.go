@@ -29,11 +29,11 @@ func RemoveEmptyString(slice []string) []string {
 func CHeckTemplate() string {
 	ReplaceArgs()
 	var data string
-	if strings.HasSuffix(os.Args[2], "standard") || strings.HasSuffix(os.Args[2], "standard.txt") {
+	if os.Args[2] == "standard" {
 		data = Read_Input("Templates/standard.txt")
-	} else if strings.HasSuffix(os.Args[2], "shadow") || strings.HasSuffix(os.Args[2], "shadow.txt") {
+	} else if os.Args[2] == "shadow" {
 		data = Read_Input("Templates/shadow.txt")
-	} else if strings.HasSuffix(os.Args[2], "thinkertoy") || strings.HasSuffix(os.Args[2], "thinkertoy.txt") {
+	} else if os.Args[2] == "thinkertoy" {
 		data = Read_Input("Templates/thinkertoy.txt")
 	} else {
 		log.Fatalln("Usage: go run . [STRING] [BANNER] \nEX: go run . something standard")
@@ -44,11 +44,11 @@ func CHeckTemplate() string {
 func CHeckTemplateO() string {
 	_, _, arg3 := ReplaceArgsO()
 	var data string
-	if strings.HasSuffix(arg3, "standard") || strings.HasSuffix(arg3, "standard.txt") || arg3 == ""{
+	if arg3 == "standard"|| arg3 == ""{
 		data = Read_Input("Templates/standard.txt")
-	} else if strings.HasSuffix(arg3, "shadow") || strings.HasSuffix(arg3, "shadow.txt") {
+	} else if arg3 == "shadow" {
 		data = Read_Input("Templates/shadow.txt")
-	} else if strings.HasSuffix(arg3, "thinkertoy") || strings.HasSuffix(arg3, "thinkertoy.txt") {
+	} else if arg3 == "thinkertoy" {
 		data = Read_Input("Templates/thinkertoy.txt")
 	} else {
 		log.Fatalln("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
@@ -57,7 +57,7 @@ func CHeckTemplateO() string {
 }
 
 func ReplaceArgs() (string, string) {
-	if strings.HasSuffix(os.Args[1], "standard") || strings.HasSuffix(os.Args[1], "standard.txt") || strings.HasSuffix(os.Args[1], "shadow") || strings.HasSuffix(os.Args[1], "shadow.txt") || strings.HasSuffix(os.Args[1], "thinkertoy") || strings.HasSuffix(os.Args[1], "thinkertoy.txt") {
+	if os.Args[1] == "standard" || os.Args[1] == "shadow" || os.Args[1] == "thinkertoy" {
 		os.Args[1], os.Args[2] = os.Args[2], os.Args[1]
 	} else {
 		return os.Args[1], os.Args[2]
@@ -69,7 +69,7 @@ func ReplaceArgsO() (string, string, string) {
 	arg1, arg2, arg3 := "", "", ""
 	argements := os.Args[1:]
 	for _, v := range argements {
-		if strings.HasSuffix(v, "standard") || strings.HasSuffix(v, "standard.txt") || strings.HasSuffix(v, "shadow") || strings.HasSuffix(v, "shadow.txt") || strings.HasSuffix(v, "thinkertoy") || strings.HasSuffix(v, "thinkertoy.txt") {
+		if v == "standard"  || v == "shadow" || v == "thinkertoy" {
 			arg3 = v
 		} else if strings.HasPrefix(v, "--output=") {
 			arg1 = v
