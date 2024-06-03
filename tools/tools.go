@@ -27,7 +27,6 @@ func RemoveEmptyString(slice []string) []string {
 }
 
 func CHeckTemplate() string {
-	ReplaceArgs()
 	var data string
 	if os.Args[2] == "standard" {
 		data = Read_Input("Templates/standard.txt")
@@ -42,42 +41,17 @@ func CHeckTemplate() string {
 }
 
 func CHeckTemplateO() string {
-	_, _, arg3 := ReplaceArgsO()
 	var data string
-	if arg3 == "standard"|| arg3 == ""{
+	if os.Args[3] == "standard" || os.Args[3] == "" {
 		data = Read_Input("Templates/standard.txt")
-	} else if arg3 == "shadow" {
+	} else if os.Args[3] == "shadow" {
 		data = Read_Input("Templates/shadow.txt")
-	} else if arg3 == "thinkertoy" {
+	} else if os.Args[3] == "thinkertoy" {
 		data = Read_Input("Templates/thinkertoy.txt")
 	} else {
 		log.Fatalln("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
 	}
 	return data
-}
-
-func ReplaceArgs() (string, string) {
-	if os.Args[1] == "standard" || os.Args[1] == "shadow" || os.Args[1] == "thinkertoy" {
-		os.Args[1], os.Args[2] = os.Args[2], os.Args[1]
-	} else {
-		return os.Args[1], os.Args[2]
-	}
-	return os.Args[1], os.Args[2]
-}
-
-func ReplaceArgsO() (string, string, string) {
-	arg1, arg2, arg3 := "", "", ""
-	argements := os.Args[1:]
-	for _, v := range argements {
-		if v == "standard"  || v == "shadow" || v == "thinkertoy" {
-			arg3 = v
-		} else if strings.HasPrefix(v, "--output=") {
-			arg1 = v
-		} else {
-			arg2 = v
-		}
-	}
-	return arg1, arg2, arg3
 }
 
 func StoreResult(filename, content string) {

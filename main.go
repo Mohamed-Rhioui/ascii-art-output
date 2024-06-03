@@ -1,17 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	"ascii-art-fs/programs"
 )
 
 func main() {
 	if len(os.Args[1:]) > 3 || len(os.Args) == 1 {
-		fmt.Print("Usage: go run . [OPTION] [STRING] [BANNER]\nEX: go run . --output=<fileName.txt> something standard")
+		log.Fatalln("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
 	}
 	if len(os.Args[1:]) <= 3 {
-		programs.Output()
+		if len(os.Args[1:]) <= 2 && !(strings.HasPrefix(os.Args[1], "--output=")) {
+			programs.AsciiArtFs()
+		} else if len(os.Args[1:]) == 3 || (len(os.Args[1:]) == 2 && (strings.HasPrefix(os.Args[1], "--output="))) {
+			programs.Output()
+		} else if len(os.Args[1:]) == 1 && (strings.HasPrefix(os.Args[1], "--output=")) {
+			programs.AsciiArtFs()
+		}
 	}
 }
