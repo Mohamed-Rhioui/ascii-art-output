@@ -7,92 +7,61 @@ import (
 	"strings"
 )
 
-func Read_Input(infile_name string) string {
-	buffer, err := os.ReadFile(infile_name)
-	CheckError(err, "Error: failed to read infile: \""+infile_name+"\"!!")
+// ReadInput reads the content of the specified file.
+func ReadInput(filename string) string {
+	buffer, err := os.ReadFile(filename)
+	CheckError(err, "Error: failed to read infile: \""+filename+"\"!!")
 	if len(buffer) == 0 {
-		log.Fatalln("Error: infile is empty: \"" + infile_name + "\"!!")
+		log.Fatalln("Error: infile is empty: \"" + filename + "\"!!")
 	}
 	return string(buffer)
 }
 
-func RemoveEmptyString(slice []string) []string {
+// RemoveEmptyStrings removes empty strings from a slice of strings.
+func RemoveEmptyStrings(slice []string) []string {
 	var result []string
-	for i := 0; i < len(slice); i++ {
-		if slice[i] != "" {
-			result = append(result, slice[i])
+	for _, str := range slice {
+		if str != "" {
+			result = append(result, str)
 		}
 	}
 	return result
 }
 
-func CHeckTemplate() string {
+// CheckTemplate returns the content of the selected template file based on the argument.
+func CheckTemplate(arg string) string {
 	var data string
-	if os.Args[2] == "standard" {
-		data = Read_Input("Templates/standard.txt")
-	} else if os.Args[2] == "shadow" {
-		data = Read_Input("Templates/shadow.txt")
-	} else if os.Args[2] == "thinkertoy" {
-		data = Read_Input("Templates/thinkertoy.txt")
-	} else {
-		log.Fatalln("Usage: go run . [STRING] [BANNER] \nEX: go run . something standard")
+	switch arg {
+	case "standard":
+		data = ReadInput("Templates/standard.txt")
+	case "shadow":
+		data = ReadInput("Templates/shadow.txt")
+	case "thinkertoy":
+		data = ReadInput("Templates/thinkertoy.txt")
+	default:
+		log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
 	}
 	return data
 }
 
-func CHeckTemplateO() string {
-	var data string
-	if os.Args[3] == "standard" || os.Args[3] == "" {
-		data = Read_Input("Templates/standard.txt")
-	} else if os.Args[3] == "shadow" {
-		data = Read_Input("Templates/shadow.txt")
-	} else if os.Args[3] == "thinkertoy" {
-		data = Read_Input("Templates/thinkertoy.txt")
-	} else {
-		log.Fatalln("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
-	}
-	return data
-}
-
+// StoreResult stores the result string into the specified file.
 func StoreResult(filename, content string) {
 	if strings.HasPrefix(filename, "--output=") {
-		filename := filename[len("--output="):]
-		if filename == "main.go" {
-			fmt.Println("Can not storing result in main.go")
-			return
-		}
-		file, err := os.Create(filename)
-		if err != nil {
-			fmt.Println("Error creating file:", err)
-			return
-		}
-		defer file.Close()
-		_, err = file.WriteString(content)
-		if err != nil {
-			fmt.Println("Error writing to file:", err)
-			return
-		}
-		fmt.Println("Result stored in", filename)
-	} else {
-		if filename == "main.go" {
-			fmt.Println("Can not storing result in main.go")
-			return
-		}
-		file, err := os.Create(filename)
-		if err != nil {
-			fmt.Println("Error creating file:", err)
-			return
-		}
-		defer file.Close()
-		_, err = file.WriteString(content)
-		if err != nil {
-			fmt.Println("Error writing to file:", err)
-			return
-		}
-		fmt.Println("Result stored in", filename)
+		filename = strings.TrimPrefix(filename, "--output=")
 	}
+	if filename == "main.go" {
+		fmt.Println("Cannot store result in main.go")
+		return
+	}
+	file, err := os.Create(filename)
+	CheckError(err, "Error creating file: "+filename)
+	defer file.Close()
+	_, err = file.WriteString(content)
+	CheckError(err, "Error writing to file: "+filename)
+	fmt.Println("Result stored in", filename)
 }
 
+// IsAllNl checks if a string consists solely of newline characters.
 func IsAllNl(result string) bool {
 	for _, char := range result {
 		if char != '\n' {
@@ -102,8 +71,9 @@ func IsAllNl(result string) bool {
 	return true
 }
 
+// CheckError logs a fatal error if the provided error is not nil.
 func CheckError(err error, msg string) {
 	if err != nil {
-		log.Fatalln(err, msg+"\n")
+		log.Fatalln(msg, err)
 	}
 }

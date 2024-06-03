@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -9,16 +10,29 @@ import (
 )
 
 func main() {
-	if len(os.Args[1:]) > 3 || len(os.Args) == 1 {
-		log.Fatalln("Usage: go run . [STRING] [BANNER]\nEX: go run . something standard")
+	args := os.Args[1:]
+	if len(args) > 3 || len(args) == 0 {
+		log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
 	}
-	if len(os.Args[1:]) <= 3 {
-		if len(os.Args[1:]) <= 2 && !(strings.HasPrefix(os.Args[1], "--output=")) {
-			programs.AsciiArtFs()
-		} else if len(os.Args[1:]) == 3 || (len(os.Args[1:]) == 2 && (strings.HasPrefix(os.Args[1], "--output="))) {
-			programs.Output()
-		} else if len(os.Args[1:]) == 1 && (strings.HasPrefix(os.Args[1], "--output=")) {
-			programs.AsciiArtFs()
+	outputToFile := false
+	for _, arg := range args {
+		if strings.HasPrefix(arg, "--output=") {
+			outputToFile = true
+			break
+		}
+	}
+	if outputToFile {
+		fmt.Println(args)
+		if len(args) == 3 || (len(args) == 2 && strings.HasPrefix(args[1], "--output=")) { 
+			programs.AsciiArt(true)
+		} else {
+			log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
+		}
+	} else {
+		if len(args) == 1 || len(args) == 2 { 
+			programs.AsciiArt(false)
+		} else {
+			log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
 		}
 	}
 }
