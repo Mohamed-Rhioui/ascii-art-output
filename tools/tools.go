@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// ReadInput reads the content of the specified file.
+// Function for reading input file (banner)
 func ReadInput(filename string) string {
 	buffer, err := os.ReadFile(filename)
 	CheckError(err, "Error: failed to read infile: \""+filename+"\"!!")
@@ -17,7 +17,7 @@ func ReadInput(filename string) string {
 	return string(buffer)
 }
 
-// RemoveEmptyStrings removes empty strings from a slice of strings.
+// Function fo remove empty string
 func RemoveEmptyStrings(slice []string) []string {
 	var result []string
 	for _, str := range slice {
@@ -28,7 +28,7 @@ func RemoveEmptyStrings(slice []string) []string {
 	return result
 }
 
-// CheckTemplate returns the content of the selected template file based on the argument.
+// Check the template name 
 func CheckTemplate(arg string) string {
 	var data string
 	switch arg {
@@ -44,7 +44,7 @@ func CheckTemplate(arg string) string {
 	return data
 }
 
-// StoreResult stores the result string into the specified file.
+// Storing result in file output
 func StoreResult(filename, content string) {
 	if strings.HasPrefix(filename, "--output=") {
 		filename = strings.TrimPrefix(filename, "--output=")
@@ -61,7 +61,7 @@ func StoreResult(filename, content string) {
 	fmt.Println("Result stored in", filename)
 }
 
-// IsAllNl checks if a string consists solely of newline characters.
+// Ckeck if all input string new lines
 func IsAllNl(result string) bool {
 	for _, char := range result {
 		if char != '\n' {
@@ -71,7 +71,7 @@ func IsAllNl(result string) bool {
 	return true
 }
 
-// CheckError logs a fatal error if the provided error is not nil.
+// Function for error
 func CheckError(err error, msg string) {
 	if err != nil {
 		log.Fatalln(msg, err)

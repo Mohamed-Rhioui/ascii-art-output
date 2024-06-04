@@ -1,10 +1,11 @@
-package programs
+package main
 
 import (
-	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"strings"
+	"testing"
 
 	"ascii-art-output/tools"
 )
@@ -34,9 +35,8 @@ func DrawAsciiArt(elements []string, input string) string {
 }
 
 // Function to read input and template, and printing or storing result
-func AsciiArt(isOutput bool) {
+func AsciiArt(input string, isOutput bool) string {
 	args := os.Args[1:]
-	var input string
 	var template string
 
 	if isOutput {
@@ -68,10 +68,41 @@ func AsciiArt(isOutput bool) {
 		result = result[1:]
 	}
 
-	if isOutput {
-		outputFile := args[0]
-		tools.StoreResult(outputFile, result)
-	} else {
-		fmt.Print(result)
+	return result
+}
+
+func LoadTests() []string {
+	data, err := os.ReadFile("tests_input.txt")
+	if err != nil {
+		log.Fatalln("Error :", err)
+	}
+	text := strings.Split(string(data), "\n")
+	return text
+}
+
+const InputFile string = "Templates/thinkertoy.txt"
+
+// const InputFile string = "standard.txt"
+// const InputFile string = "shadow.txt"
+
+func Test_main(t *testing.T) {
+	var want string
+	tests := LoadTests()
+	for _, test := range tests {
+		if test == "" {
+			continue
+		}
+		// run the tests in the main and stock the result from stdout.
+		got, err := exec.Command("go", "run", ".", "--output=banner.txt", test, InputFile).Output()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		want = AsciiArt(test, true)
+		// Compare the result that the main.go give and the test give if they are the same
+		if want == string(got) {
+			t.Logf(test)
+		} else {
+			t.Fatal(test)
+		}
 	}
 }
