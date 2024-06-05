@@ -1,6 +1,5 @@
-hello
-\n
-Hello\n
+"--output test00.txt banana standard "
+Hello
 hello
 HeLlO
 Hello There

@@ -35,25 +35,7 @@ func DrawAsciiArt(elements []string, input string) string {
 }
 
 // Function to read input and template, and printing or storing result
-func AsciiArt(input string, isOutput bool) string {
-	args := os.Args[1:]
-	var template string
-
-	if isOutput {
-		input = args[1]
-		if len(args) == 3 {
-			template = args[2]
-		} else {
-			template = "standard"
-		}
-	} else {
-		input = args[0]
-		if len(args) == 2 {
-			template = args[1]
-		} else {
-			template = "standard"
-		}
-	}
+func AsciiArt( input string, template string) string {
 	// Read template data
 	data := tools.CheckTemplate(template)
 	data = strings.ReplaceAll(data, "\r", "\n")
@@ -71,33 +53,38 @@ func AsciiArt(input string, isOutput bool) string {
 	return result
 }
 
+// LoadTests reads the test inputs from a file.
 func LoadTests() []string {
 	data, err := os.ReadFile("tests_input.txt")
 	if err != nil {
-		log.Fatalln("Error :", err)
+		log.Fatalln("Error reading test inputs:", err)
 	}
 	text := strings.Split(string(data), "\n")
 	return text
 }
 
-const InputFile string = "Templates/thinkertoy.txt"
-
-// const InputFile string = "standard.txt"
-// const InputFile string = "shadow.txt"
-
-func Test_main(t *testing.T) {
-	var want string
+func TestMain(t *testing.T) {
+	template := "standard"
 	tests := LoadTests()
 	for _, test := range tests {
 		if test == "" {
 			continue
 		}
-		// run the tests in the main and stock the result from stdout.
-		got, err := exec.Command("go", "run", ".", "--output=banner.txt", test, InputFile).Output()
+		cmd := exec.Command("go", "run", ".","--output=banner.txt", test, template)
+		err := cmd.Run()
 		if err != nil {
 			log.Fatalln(err)
 		}
-		want = AsciiArt(test, true)
+
+		got, err := os.ReadFile("banner.txt")
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		// want := AsciiArt(true, test, template)
+
+		want := AsciiArt( test, template)
+
 		// Compare the result that the main.go give and the test give if they are the same
 		if want == string(got) {
 			t.Logf(test)
