@@ -10,9 +10,9 @@ import (
 
 func main() {
 	args := os.Args[1:]
-	// Protection 
+	// Protection
 	if len(args) > 3 || len(args) == 0 {
-		log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
+		log.Fatalln("\nUsage: go run . [OPTION] [STRING] [BANNER]\nEX: go run . --output=<fileName.txt> something standard")
 	}
 	outputToFile := false
 	if strings.HasPrefix(args[0], "--output=") {
@@ -23,14 +23,19 @@ func main() {
 	if outputToFile {
 		if len(args) == 3 || (len(args) == 2 && strings.HasPrefix(args[0], "--output=")) {
 			programs.AsciiArt(true)
+		} else if len(args) == 1 && strings.HasPrefix(args[0], "--output=") {
+			programs.AsciiArt(false )
 		} else {
-			log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
+			log.Fatalln("\nUsage: go run . [OPTION] [STRING] [BANNER]\nEX: go run . --output=<fileName.txt> something standard")
 		}
 	} else {
 		if len(args) == 1 || len(args) == 2 {
+			if strings.Contains(args[0],"--output") {
+				log.Fatalln("\nUsage: go run . [OPTION] [STRING] [BANNER]\nEX: go run . --output=<fileName.txt> something standard")
+			}
 			programs.AsciiArt(false)
 		} else {
-			log.Fatalln("\n          Usage: go run . [OPTION] [STRING] [BANNER]\n          EX: go run . --output=<fileName.txt> something standard")
+			log.Fatalln("\nUsage: go run . [OPTION] [STRING] [BANNER]\nEX: go run . --output=<fileName.txt> something standard")
 		}
 	}
 }
